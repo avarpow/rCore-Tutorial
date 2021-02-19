@@ -7,7 +7,6 @@ use crate::memory::*;
 use algorithm::*;
 use lazy_static::*;
 use spin::Mutex;
-
 lazy_static! {
     /// 帧分配器
     pub static ref FRAME_ALLOCATOR: Mutex<FrameAllocator<AllocatorImpl>> = Mutex::new(FrameAllocator::new(Range::from(
@@ -27,6 +26,8 @@ pub struct FrameAllocator<T: Allocator> {
 impl<T: Allocator> FrameAllocator<T> {
     /// 创建对象
     pub fn new(range: impl Into<Range<PhysicalPageNumber>> + Copy) -> Self {
+        println! {"FrameAllocator start_ppn:{}",range.into().start};
+        println! {"allocator length:{}",range.into().len()};
         FrameAllocator {
             start_ppn: range.into().start,
             allocator: T::new(range.into().len()),
@@ -45,6 +46,7 @@ impl<T: Allocator> FrameAllocator<T> {
     ///
     /// 这个函数会在 [`FrameTracker`] 被 drop 时自动调用，不应在其他地方调用
     pub(super) fn dealloc(&mut self, frame: &FrameTracker) {
+        println! {"FrameAllocator dealloc index:{}",frame.page_number() - self.start_ppn};
         self.allocator.dealloc(frame.page_number() - self.start_ppn);
     }
 }

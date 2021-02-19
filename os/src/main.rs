@@ -35,7 +35,6 @@ mod panic;
 mod sbi;
 
 extern crate alloc;
-
 // 汇编编写的程序入口，具体见该文件
 global_asm!(include_str!("entry.asm"));
 
@@ -76,6 +75,5 @@ pub extern "C" fn rust_main() {
         };
         println!("{} and {}", frame_0.address(), frame_1.address());
     }
-
     panic!("end of rust_main");
 }

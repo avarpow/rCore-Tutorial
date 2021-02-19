@@ -2,7 +2,6 @@
 
 use super::Allocator;
 use alloc::{vec, vec::Vec};
-
 /// 使用栈结构实现分配器
 ///
 /// 在 `Vec` 末尾进行加入 / 删除。
@@ -22,6 +21,7 @@ impl Allocator for StackedAllocator {
         if let Some((start, end)) = self.list.pop() {
             if end - start > 1 {
                 self.list.push((start + 1, end));
+                println_rename!{"StackedAllocator alloc index:{}  || push start:{} end:{}",start,start+1,end};
             }
             Some(start)
         } else {
@@ -31,5 +31,7 @@ impl Allocator for StackedAllocator {
 
     fn dealloc(&mut self, index: usize) {
         self.list.push((index, index + 1));
+        println_rename!{"StackedAllocator dealloc index:{}",index};
+
     }
 }

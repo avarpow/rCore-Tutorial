@@ -1,9 +1,7 @@
 //! 提供向量分配器的简单实现 [`BitmapVectorAllocator`]
-
 use super::VectorAllocator;
 use bit_field::BitArray;
 use core::cmp::min;
-
 /// Bitmap 中的位数（4K）
 const BITMAP_SIZE: usize = 4096;
 
@@ -25,14 +23,18 @@ impl VectorAllocator for BitmapVectorAllocator {
     fn alloc(&mut self, size: usize, align: usize) -> Option<usize> {
         for start in (0..self.capacity - size).step_by(align) {
             if (start..start + size).all(|i| !self.bitmap.get_bit(i)) {
+                println_rename!{"VectorAllocator alloc start:{} size:{}",start,size};
                 (start..start + size).for_each(|i| self.bitmap.set_bit(i, true));
                 return Some(start);
             }
         }
+        println_rename!{"VectorAllocator failed"};
+
         None
     }
     fn dealloc(&mut self, start: usize, size: usize, _align: usize) {
         assert!(self.bitmap.get_bit(start));
         (start..start + size).for_each(|i| self.bitmap.set_bit(i, false));
+        println_rename!{"VectorAllocator dealloc start:{} size:{}",start,size};
     }
 }

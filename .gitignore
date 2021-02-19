@@ -17,11 +17,11 @@ package-lock.json
 ### Cargo
 # Cargo 包设置（自动生成）
 Cargo.lock
-
 ### rCore
 # Rust 编译文件
 os/target
 user/target
 user/build
+os/src/algorithm/target
 # GDB 临时文件
 .gdb_history
