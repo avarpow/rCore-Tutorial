@@ -17,7 +17,7 @@ impl Allocator for SegmentTreeAllocator {
         for index in (1..leaf_count).rev() {
             //这里维护刚才被设置为true的上层节点状态
             let value = tree.get_bit(2 * index) && tree.get_bit(2 * index + 1) && tree.get_bit(index);
-            //println_rename!("new index:{},leftson_bit:{},rightson_bit:{},set_bit:{}",index,tree.get_bit(2 * index) , tree.get_bit(2 * index + 1) ,value);
+            //println!("new index:{},leftson_bit:{},rightson_bit:{},set_bit:{}",index,tree.get_bit(2 * index) , tree.get_bit(2 * index + 1) ,value);
             tree.set_bit(index, value);
         }
         Self{ tree }
@@ -29,10 +29,10 @@ impl Allocator for SegmentTreeAllocator {
         }else{
             while index < self.tree.len()/2{//while条件为index指向中间节点
                 if !self.tree.get_bit(index * 2){
-                    println_rename!{"alloc from left:{}",index * 2};
+                    println!{"alloc from left:{}",index * 2};
                     index *= 2;
                 }else if !self.tree.get_bit(index * 2 + 1){
-                    println_rename!{"alloc from right:{}",index * 2+1};
+                    println!{"alloc from right:{}",index * 2+1};
                     index = index * 2 + 1;
                 }else {
                     panic!("Damaged Segement Tree!");
@@ -54,7 +54,7 @@ impl SegmentTreeAllocator{
         while index > 1 {
             index /= 2;
             let v = self.tree.get_bit(2 * index) && self.tree.get_bit(2 * index + 1);
-            println_rename!("upload index:{},leftson_bit:{},rightson_bit:{},set_bit:{}",index,self.tree.get_bit(2 * index) , self.tree.get_bit(2 * index + 1) ,v);
+            println!("upload index:{},leftson_bit:{},rightson_bit:{},set_bit:{}",index,self.tree.get_bit(2 * index) , self.tree.get_bit(2 * index + 1) ,v);
             //如果两个子节点都被占用了，则标记父节点为占用
             self.tree.set_bit(index, v);
         }
